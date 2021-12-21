@@ -1,0 +1,7 @@
+SOURCE: <path to directory containing the raw data FASTQ files>
+EXT: "_001.fastq.gz"
+DEST: <working directory full path>
+RNAREF: <database of rRNA genes to use for filtering>
+DBGSNAP: "<name of the GSNAP reference genome>"
+DBGSNAPDIR: <GSNAP indexed reference genome full path>
+GTFGSNAP: <path to GTF file for the reference genome>
