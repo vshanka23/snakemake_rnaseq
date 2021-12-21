@@ -44,7 +44,7 @@ This is a repository for the snakemake version of the [bash RNASeq pipeline](htt
 ## I. Test run (head/master/login node)
 
 1. Open ssh shell (using [MobaXterm](https://mobaxterm.mobatek.net/download-home-edition.html) or [Putty](https://www.putty.org/)) on head/master/login node
-2. Make a working directory for the analysis and git clone this repository [(git clone https://github.com/chg-bsl/snakemake_rnaseq.git)]
+2. Make a working directory for the analysis and git clone this repository [(*git clone https://github.com/chg-bsl/snakemake_rnaseq.git*)]
 3. Copy *Snakefile*, *snakemake_submitter.sh*, *RNASeq.yaml*, *slurm/config.yaml* and *initiator.sh* to working directory
 4. Make sure the variables encompassed by "<>" in *slurm/config.yaml*, *RNASeq.yaml* and *snakemake_submitter.sh* have been modified to reflect info specific to your run (eg: working directory, raw data location, etc)
 5. Open a ssh shell and run:
