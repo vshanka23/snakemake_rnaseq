@@ -1,5 +1,5 @@
 # Description
-This is a repository for the snakemake version of the [bash RNASeq pipeline](https://github.com/chg-bsl/bash_rnaseq) compatible with the Clemson University's Center for Human Genetics' High Performance Computing (HPC) cluster.
+This is a repository for the snakemake version of the [bash RNASeq pipeline](https://github.com/chg-bsl/bash_rnaseq) compatible with the Clemson University's Center for Human Genetics (CUCHG) High Performance Computing (HPC) cluster.
 
 - *slurm/config.yaml*: config file for HPC architecture and slurm compatibility
 - *snakemake_submitter.sh*: initiates conda environment and submits the snakemake job to snakemake
@@ -43,7 +43,7 @@ This is a repository for the snakemake version of the [bash RNASeq pipeline](htt
 
 ## I. Test run (head/master/login node)
 
-1. Open ssh shell (using [MobaXterm](https://mobaxterm.mobatek.net/download-home-edition.html) or [Putty](https://www.putty.org/)) on master/node
+1. Open ssh shell (using [MobaXterm](https://mobaxterm.mobatek.net/download-home-edition.html) or [Putty](https://www.putty.org/)) on head/master/login node
 2. Make a working directory for the analysis and git clone this repository [(git clone https://github.com/chg-bsl/snakemake_rnaseq.git)]
 3. Copy *Snakefile*, *snakemake_submitter.sh*, *RNASeq.yaml*, *slurm/config.yaml* and *initiator.sh* to working directory
 4. Make sure the variables encompassed by "<>" in *slurm/config.yaml*, *RNASeq.yaml* and *snakemake_submitter.sh* have been modified to reflect info specific to your run (eg: working directory, raw data location, etc)
@@ -67,7 +67,7 @@ This is a repository for the snakemake version of the [bash RNASeq pipeline](htt
 
 ## II. Actual run (head/master/login node)
 
-If *Generate the DAG figure* and *Generate the workflow* commands in the test run do not generate any errors (red text), run:
+If step 5 in test run (*Generate the DAG figure* and *Generate the workflow* commands) do not generate any errors (red text), run:
 ```
 ./initiator.sh
 ```
@@ -75,10 +75,9 @@ If *Generate the DAG figure* and *Generate the workflow* commands in the test ru
 # Tracking progress
 There are three places to check for progress:
 1. ```squeue```
-2. In the *log* directory, look for *output_<job_ID>.txt* and *error_<job_ID>.txt* for current status of the run. When the run is successful, the last line should contain 
-3. In the *logs_slurm* directory, look for the log files with specific rule names on the file names for current status. 
+2. This pipeline (when run successfully) will create *log* and *logs_slurm* directories within the working directory. In the *log* directory, look for *output_<job_ID>.txt* and *error_<job_ID>.txt* for current status of the run. When the run is successful, the last line should contain a *x of x steps (100%) done*.
+3. In the *logs_slurm* directory, the most current log files with specific rule names on the file names represent the current statuses. 
 
 ## Future additions
 - Make a link to image showing what the directory should look like
 - Create a rule to grep *module add* to summarize a session info
-- Add string and integer hyperlink
