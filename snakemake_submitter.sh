@@ -22,4 +22,5 @@ conda activate <conda environment containing snakemake installation>
 snakemake \
 -s Snakefile \
 --profile slurm \
---configfile RNASeq.yaml
+--configfile RNASeq.yaml \
+--latency-wait 30
