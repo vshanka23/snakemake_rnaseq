@@ -16,7 +16,7 @@ This is a repository for the snakemake version of the [bash RNASeq pipeline](htt
 - [java_jdk/>=1.8](https://www.oracle.com/java/technologies/javase/javase8-archive-downloads.html)
 - [bbmap/>=38.73](https://jgi.doe.gov/data-and-tools/bbtools/)
 - [gmap_gsnap](https://github.com/juliangehring/GMAP-GSNAP)
-- [SalmonTE](https://github.com/hyunhwan-jeong/SalmonTE)
+- [SalmonTE/>=0.4](https://github.com/hyunhwan-jeong/SalmonTE)
 - [samtools/>=1.10](https://github.com/samtools/samtools)
 - [subread/>=1.6.4](http://subread.sourceforge.net/)
 - [slurm](https://slurm.schedmd.com/sbatch.html)
