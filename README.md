@@ -11,7 +11,7 @@ This is a repository for the snakemake version of the [bash RNASeq pipeline](htt
 If you use this pipeline, please cite the following:
 
 - COBRE Grant (P20 GM139767) for support for use of Clemson University Center for Human Genetics Research Core facilities
-- Clemson University Center for Human Genetics Bioinformatics and Statistics Laboratory
+- Clemson University Center for Human Genetics Bioinformatics and Statistics Core
 
 # Prerequisites 
 ***only install these if not running the pipeline on CUCHG's HPC***
