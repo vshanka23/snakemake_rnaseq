@@ -7,6 +7,12 @@ This is a repository for the snakemake version of the [bash RNASeq pipeline](htt
 - *Snakefile*: the pipeline
 - *RNASeq.yaml*: environmental variables for the pipeline
 
+# Citation
+If you use this pipeline, please cite the following:
+
+- COBRE Grant (P20 GM139767) for support for use of Clemson University Center for Human Genetics Research Core facilities
+- Clemson University Center for Human Genetics Bioinformatics and Statistics Laboratory
+
 # Prerequisites 
 ***only install these if not running the pipeline on CUCHG's HPC***
 
@@ -45,7 +51,10 @@ This is a repository for the snakemake version of the [bash RNASeq pipeline](htt
 ## I. Test run (head/master/login node)
 
 1. Open ssh shell (using [MobaXterm](https://mobaxterm.mobatek.net/download-home-edition.html) or [Putty](https://www.putty.org/)) on head/master/login node
-2. Make a working directory for the analysis and git clone this repository [(*git clone https://github.com/chg-bsl/snakemake_rnaseq.git*)]
+2. Make a working directory for the analysis and git clone this repository:
+   ```
+   git clone https://github.com/chg-bsl/snakemake_rnaseq.git
+   ```
 3. Copy *Snakefile*, *snakemake_submitter.sh*, *RNASeq.yaml*, *slurm/config.yaml* and *initiator.sh* to working directory
 4. Make sure the variables encompassed by "<>" in *slurm/config.yaml*, *RNASeq.yaml* and *snakemake_submitter.sh* have been modified to reflect info specific to your run (eg: working directory, raw data location, etc)
 5. Open a ssh shell and run:
