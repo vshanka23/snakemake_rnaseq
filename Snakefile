@@ -4,8 +4,15 @@ SAMPLES=sorted(glob_wildcards(config["SOURCE"]+"/{samples}"+config["EXT"]).sampl
 
 SAMPLES_NF=[]
 import re
+
+# Multiple Lane section
+
+# for item in SAMPLES:
+# 	var1=re.sub('_L00[1-2]_R[1-2]','',str(item))
+# 	SAMPLES_NF.append(var1)
+
 for item in SAMPLES:
-	var1=re.sub('_L00[1-2]_R[1-2]','',str(item))
+	var1=re.sub('_R[1-2]','',str(item))
 	SAMPLES_NF.append(var1)
 
 SAMPLES_SET = set(SAMPLES_NF)
@@ -14,34 +21,60 @@ SAMPLES_UNIQ = list(SAMPLES_SET)
 rule all:
 	input:
 		config["DEST"]+"/5_featurecounts/combined_counts.txt",
-		config["DEST"]+"/6_te/2_te_counts/combined_TE_counts.txt"
+		config["DEST"]+"/6_te/2_te_counts/combined_TE_counts.txt",
+		config["DEST"]+"/"+"multiqc_report.html"
 
-rule merge_forward_lanes:
-	input:
-		L1=config["SOURCE"]+"/{SAMPLES_UNIQ}_L001_R1"+config["EXT"],
-		L2=config["SOURCE"]+"/{SAMPLES_UNIQ}_L002_R1"+config["EXT"]
-	output:
-		config["DEST"]+"/1_mergelane/{SAMPLES_UNIQ}_R1"+config["EXT"]
-	resources: cpus=1, mem_mb=10000, time_min=1440
-	shell:
-		"""
-		cat {input.L1} {input.L2} > {output}
-		"""
-rule merge_reverse_lanes:
-	input:
-		L1=config["SOURCE"]+"/{SAMPLES_UNIQ}_L001_R2"+config["EXT"],
-		L2=config["SOURCE"]+"/{SAMPLES_UNIQ}_L002_R2"+config["EXT"]
-	output:
-		config["DEST"]+"/1_mergelane/{SAMPLES_UNIQ}_R2"+config["EXT"]
-	resources: cpus=1, mem_mb=10000, time_min=1440
-	shell:
-		"""
-		cat {input.L1} {input.L2} > {output}
-		"""
+# Multiple Lane section
+
+# rule merge_forward_lanes:
+# 	input:
+# 		L1=config["SOURCE"]+"/{SAMPLES_UNIQ}_L001_R1"+config["EXT"],
+# 		L2=config["SOURCE"]+"/{SAMPLES_UNIQ}_L002_R1"+config["EXT"]
+# 	output:
+# 		config["DEST"]+"/1_mergelane/{SAMPLES_UNIQ}_R1"+config["EXT"]
+# 	resources: cpus=1, mem_mb=10000, time_min=1440
+# 	shell:
+# 		"""
+# 		cat {input.L1} {input.L2} > {output}
+# 		"""
+# rule merge_reverse_lanes:
+# 	input:
+# 		L1=config["SOURCE"]+"/{SAMPLES_UNIQ}_L001_R2"+config["EXT"],
+# 		L2=config["SOURCE"]+"/{SAMPLES_UNIQ}_L002_R2"+config["EXT"]
+# 	output:
+# 		config["DEST"]+"/1_mergelane/{SAMPLES_UNIQ}_R2"+config["EXT"]
+# 	resources: cpus=1, mem_mb=10000, time_min=1440
+# 	shell:
+# 		"""
+# 		cat {input.L1} {input.L2} > {output}
+# 		"""
+# rule qc:
+# 	input:
+# 		R1=config["DEST"]+"/1_mergelane/{SAMPLES_UNIQ}_R1"+config["EXT"],
+# 		R2=config["DEST"]+"/1_mergelane/{SAMPLES_UNIQ}_R2"+config["EXT"]
+# 	output:
+# 		R1=config["DEST"]+"/2_qc/{SAMPLES_UNIQ}_R1"+config["EXT"],
+# 		R2=config["DEST"]+"/2_qc/{SAMPLES_UNIQ}_R2"+config["EXT"],
+# 		html=config["DEST"]+"/2_qc/{SAMPLES_UNIQ}.html",
+# 		json=config["DEST"]+"/2_qc/{SAMPLES_UNIQ}.json"
+# 	resources: cpus=4, mem_mb=20000, time_min=1440
+# 	shell:
+# 		"""
+# 		module add fastp
+# 		fastp \
+# 		--thread 4 \
+# 		-i {input.R1} \
+# 		-I {input.R2} \
+# 		-o {output.R1} \
+# 		-O {output.R2} \
+# 		-h {output.html} \
+# 		-j {output.json}
+# 		"""
+
 rule qc:
 	input:
-		R1=config["DEST"]+"/1_mergelane/{SAMPLES_UNIQ}_R1"+config["EXT"],
-		R2=config["DEST"]+"/1_mergelane/{SAMPLES_UNIQ}_R2"+config["EXT"]
+		R1=config["SOURCE"]+"/{SAMPLES_UNIQ}_R1"+config["EXT"],
+		R2=config["SOURCE"]+"/{SAMPLES_UNIQ}_R2"+config["EXT"]
 	output:
 		R1=config["DEST"]+"/2_qc/{SAMPLES_UNIQ}_R1"+config["EXT"],
 		R2=config["DEST"]+"/2_qc/{SAMPLES_UNIQ}_R2"+config["EXT"],
@@ -86,6 +119,29 @@ rule bbduk:
 		outu2={output.U2} \
 		k=31 \
 		ref={params.RNAREF}
+		"""
+
+rule fastqc:
+	input:
+		M1=config["DEST"]+"/3_bbduk/{SAMPLES_UNIQ}_R1.rRNA.fq",
+		U1=config["DEST"]+"/3_bbduk/{SAMPLES_UNIQ}_R1.nonrRNA.fq",
+		M2=config["DEST"]+"/3_bbduk/{SAMPLES_UNIQ}_R2.rRNA.fq",
+		U2=config["DEST"]+"/3_bbduk/{SAMPLES_UNIQ}_R2.nonrRNA.fq"
+	output:
+		OM1=config["DEST"]+"/7_FASTQC/{SAMPLES_UNIQ}_R1.rRNA_fastqc.html",
+		OU1=config["DEST"]+"/7_FASTQC/{SAMPLES_UNIQ}_R1.nonrRNA_fastqc.html",
+		OM2=config["DEST"]+"/7_FASTQC/{SAMPLES_UNIQ}_R2.rRNA_fastqc.html",
+		OU2=config["DEST"]+"/7_FASTQC/{SAMPLES_UNIQ}_R2.nonrRNA_fastqc.html"
+	params:
+		DIR=config["DEST"]+"/7_FASTQC/"
+	resources: cpus=4, mem_mb=16000, time_min=1440
+	shell:
+		"""
+		ml fastqc
+		fastqc -t 4 -o {params.DIR} {input.M1}
+		fastqc -t 4 -o {params.DIR} {input.U1}
+		fastqc -t 4 -o {params.DIR} {input.M2}
+		fastqc -t 4 -o {params.DIR} {input.U2}
 		"""
 
 rule gsnap:
@@ -253,3 +309,22 @@ rule aggregate_te:
 		df.insert(0,'Geneid', S_1.iloc[:,0])
 		df.insert(1,'length',S_1.iloc[:,1])
 		df.to_csv(output[0],index=False,header=True,sep="\t",encoding='utf-8')
+
+rule multiqc:
+	input:
+		combined_GEX=config["DEST"]+"/5_featurecounts/combined_counts.txt",
+		combined_TE=config["DEST"]+"/6_te/2_te_counts/combined_TE_counts.txt",
+		fastqc=expand(config["DEST"]+"/7_FASTQC/{SAMPLES_UNIQ}_R1.rRNA_fastqc.html",SAMPLES_UNIQ=SAMPLES_UNIQ)
+	output:
+		config["DEST"]+"/"+"multiqc_report.html"
+	params:
+		config["DEST"]
+	resources: cpus=1, mem_mb=4000, time_min=1440
+	shell:
+		"""
+		source /opt/ohpc/pub/Software/mamba-rocky/etc/profile.d/conda.sh
+		source /opt/ohpc/pub/Software/mamba-rocky/etc/profile.d/mamba.sh
+		mamba activate multiqc
+		cd {params}
+		multiqc .
+		"""
